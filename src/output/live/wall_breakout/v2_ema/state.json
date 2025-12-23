@@ -1,13 +1,13 @@
 {
-  "last_saved_book_time": "2025-12-23T13:40:00Z",
-  "next_books_wake_utc": "2025-12-23T14:00:05Z",
-  "last_saved_candle_time": "2025-12-23T13:39:00.000000000Z",
-  "next_candle_wake_utc": "2025-12-23T14:00:08Z",
-  "last_processed_candle_time": "2025-12-23T13:39:00.000000000Z",
-  "last_wall_time": "2025-12-23T13:20:00Z",
-  "retests_buy": 0,
-  "retests_sell": 0,
+  "last_saved_book_time": "2025-12-23T14:40:00Z",
+  "next_books_wake_utc": "2025-12-23T15:00:05Z",
+  "last_saved_candle_time": "2025-12-23T14:39:00.000000000Z",
+  "next_candle_wake_utc": "2025-12-23T15:00:08Z",
+  "last_processed_candle_time": "2025-12-23T14:39:00.000000000Z",
+  "last_wall_time": "2025-12-23T14:20:00Z",
+  "retests_buy": 20,
+  "retests_sell": 20,
   "pos_meta": {},
-  "tick_n": 1256,
-  "saved_at_utc": "2025-12-23T13:54:07Z"
+  "tick_n": 1316,
+  "saved_at_utc": "2025-12-23T14:58:12Z"
 }
