@@ -717,3 +717,5 @@
 {"event": "CANDLES_SAVED", "dt_utc": "2025-12-23T13:40:08Z", "n_new": 20, "newest": "2025-12-23T13:39:00.000000000Z", "attempts": 1, "schema_version": 1}
 {"event": "REPLAY_BATCH", "dt_utc": "2025-12-23T13:40:08Z", "note": "processing 20 new candles since 2025-12-23T13:19:00.000000000Z", "schema_version": 1}
 {"event": "STRAT_TICK", "dt_utc": "2025-12-23T13:40:08Z", "candle_time": "2025-12-23T13:23:00.000000000Z", "close": 4488.175, "ema": 4491.763774701528, "ref_price": 4495.58, "buy_wall": 4475.0, "sell_wall": 4500.0, "retests_buy": 0, "retests_sell": 0, "wall_time": "2025-12-23T13:20:00Z", "schema_version": 1}
+{"event": "STATE_RESTORED", "dt_utc": "2025-12-23T13:52:48Z", "note": "restored last_processed_candle_time=2025-12-23T13:39:00.000000000Z", "schema_version": 1}
+{"event": "STATE_RESTORED", "dt_utc": "2025-12-23T13:54:05Z", "note": "restored last_processed_candle_time=2025-12-23T13:39:00.000000000Z", "schema_version": 1}

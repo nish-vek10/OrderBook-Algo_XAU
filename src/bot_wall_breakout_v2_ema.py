@@ -98,10 +98,10 @@ CANDLE_RETRY_EVERY    = 10
 # =========================
 # STRATEGY CONFIG
 # =========================
-EMA_SPAN          = 21
+EMA_SPAN          = 9
 MIN_EMA_DIST      = 0.5
-RETESTS_REQUIRED  = 5
-TOUCH_DIST        = 1.0
+RETESTS_REQUIRED  = 6
+TOUCH_DIST        = 0.75
 BREAK_BUFFER      = 0.2
 STOP_BUFFER       = 1.0
 TP_R              = 2.5
@@ -110,7 +110,7 @@ MAX_WALL_DISTANCE = 12.0
 # =========================
 # EXECUTION / RISK
 # =========================
-RISK_CASH        = 1000.0
+RISK_CASH        = 500.0
 MAX_HOLD_MINUTES = 180
 ALLOW_LONGS      = True
 ALLOW_SHORTS     = True

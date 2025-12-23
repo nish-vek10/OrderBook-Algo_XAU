@@ -7,11 +7,7 @@
   "last_wall_time": "2025-12-23T13:20:00Z",
   "retests_buy": 0,
   "retests_sell": 0,
-  "entry_candle_time": null,
-  "max_exit_candle_time": null,
-  "side": null,
-  "sl": null,
-  "tp": null,
+  "pos_meta": {},
   "tick_n": 1256,
-  "saved_at_utc": "2025-12-23T13:52:12Z"
+  "saved_at_utc": "2025-12-23T13:54:07Z"
 }
