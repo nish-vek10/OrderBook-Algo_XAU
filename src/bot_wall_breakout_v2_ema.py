@@ -44,7 +44,7 @@ from __future__ import annotations
 import csv
 import json
 import time
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Optional, Tuple, Dict, List
@@ -114,6 +114,10 @@ RISK_CASH        = 1000.0
 MAX_HOLD_MINUTES = 180
 ALLOW_LONGS      = True
 ALLOW_SHORTS     = True
+
+# multi-position controls (bot parity with backtest/grid)
+MAX_OPEN_POSITIONS      = 3   # set from your best grid scenario
+MAX_ENTRIES_PER_CANDLE  = 1   # safety: avoid multiple fills on same candle
 
 SIGNALS_ONLY     = False  # set True to only log signals
 
@@ -407,9 +411,14 @@ def init_mt5() -> None:
     global SYMBOL_INFO
     if not mt5.initialize(path=MT5_TERMINAL_PATH, login=MT5_LOGIN, password=MT5_PASSWORD, server=MT5_SERVER):
         raise RuntimeError(f"mt5.initialize() failed: {mt5.last_error()}")
+
     if not mt5.symbol_select(MT5_SYMBOL, True):
         raise RuntimeError(f"symbol_select failed: {MT5_SYMBOL}")
+
     info = mt5.symbol_info(MT5_SYMBOL)
+    print("filling_mode:", getattr(info, "filling_mode", None))
+    print("trade_fill_mode:", getattr(info, "trade_fill_mode", None))
+
     if info is None:
         raise RuntimeError("symbol_info None")
     SYMBOL_INFO = info
@@ -423,14 +432,15 @@ def norm_price(x: float) -> float:
 def shutdown_mt5() -> None:
     mt5.shutdown()
 
-def get_open_position_on_symbol(symbol: str) -> Optional[mt5.TradePosition]:
+def get_open_positions_on_symbol(symbol: str) -> List[mt5.TradePosition]:
     poss = mt5.positions_get(symbol=symbol)
     if not poss:
-        return None
+        return []
+    out = []
     for p in poss:
         if int(getattr(p, "magic", 0)) == int(MAGIC):
-            return p
-    return None
+            out.append(p)
+    return out
 
 def clamp_to_step(val: float, vmin: float, vmax: float, step: float) -> float:
     val = max(vmin, min(vmax, val))
@@ -511,6 +521,7 @@ def close_position_market(pos: mt5.TradePosition, reason: str) -> Tuple[bool, An
     if tick is None:
         return False, f"tick None: {mt5.last_error()}"
 
+    # Closing order is opposite side
     if pos.type == mt5.POSITION_TYPE_BUY:
         order_type = mt5.ORDER_TYPE_SELL
         price = float(tick.bid)
@@ -518,25 +529,50 @@ def close_position_market(pos: mt5.TradePosition, reason: str) -> Tuple[bool, An
         order_type = mt5.ORDER_TYPE_BUY
         price = float(tick.ask)
 
-    req = {
-        "action": mt5.TRADE_ACTION_DEAL,
-        "symbol": pos.symbol,
-        "position": pos.ticket,
-        "volume": float(pos.volume),
-        "type": order_type,
-        "price": price,
-        "deviation": int(DEVIATION),
-        "magic": int(MAGIC),
-        "comment": f"TIME_EXIT:{reason}"[:31],
-        "type_time": mt5.ORDER_TIME_GTC,
-        "type_filling": get_supported_filling_mode(pos.symbol),
-    }
-    res = mt5.order_send(req)
-    if res is None:
-        return False, f"order_send None: {mt5.last_error()}"
-    if res.retcode != mt5.TRADE_RETCODE_DONE:
+    price = norm_price(price)
+
+    modes_to_try = [
+        get_supported_filling_mode(pos.symbol),
+        mt5.ORDER_FILLING_IOC,
+        mt5.ORDER_FILLING_RETURN,
+        mt5.ORDER_FILLING_FOK,
+    ]
+    seen = set()
+
+    for mode in modes_to_try:
+        if mode in seen:
+            continue
+        seen.add(mode)
+
+        req = {
+            "action": mt5.TRADE_ACTION_DEAL,
+            "symbol": pos.symbol,
+            "position": pos.ticket,
+            "volume": float(pos.volume),
+            "type": order_type,
+            "price": price,
+            "deviation": int(DEVIATION),
+            "magic": int(MAGIC),
+            "comment": f"TIME_EXIT:{reason}"[:31],
+            "type_time": mt5.ORDER_TIME_GTC,
+            "type_filling": int(mode),
+        }
+
+        res = mt5.order_send(req)
+        if res is None:
+            continue
+
+        if res.retcode == mt5.TRADE_RETCODE_DONE:
+            return True, res
+
+        # If it's a filling-mode issue, try next mode
+        if "Unsupported filling mode" in str(res):
+            continue
+
+        # Any other failure -> return immediately so you see the real reason
         return False, res
-    return True, res
+
+    return False, "All filling modes rejected (IOC/RETURN/FOK)"
 
 # =========================
 # Live logging
@@ -571,7 +607,8 @@ def load_state() -> Optional[Dict[str, Any]]:
     except Exception:
         return None
 
-def apply_state_to_botstate(state: BotState, data: Dict[str, Any]) -> None:
+def apply_state_to_botstate(state: Any, data: Dict[str, Any]) -> None:
+
     """
     Safely copy persisted values into BotState (ignore unknown keys).
     """
@@ -599,14 +636,11 @@ class BotState:
     retests_buy: int = 0
     retests_sell: int = 0
 
-    # position tracking (for time exit)
-    entry_candle_time: Optional[str] = None
-    max_exit_candle_time: Optional[str] = None
-    side: Optional[str] = None
-    sl: Optional[float] = None
-    tp: Optional[float] = None
+    # position tracking (multi) for time exit
+    pos_meta: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
     tick_n: int = 0
+
 
 # =========================
 # Books cadence runner (dedupe + aligned)
@@ -958,29 +992,73 @@ def maybe_process_new_candles_and_trade(state: BotState) -> None:
                 "wall_time": wall_time,
             })
 
-        # Manage open position first (same behavior)
-        pos = get_open_position_on_symbol(MT5_SYMBOL)
-        if pos is not None:
-            if state.max_exit_candle_time:
-                max_exit_dt = parse_z_time(state.max_exit_candle_time)
-                if candle_dt >= max_exit_dt:
-                    ok, res = close_position_market(pos, "max_hold")
-                    append_trade_log({
-                        "event": "TIME_EXIT",
-                        "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
-                        "candle_time": candle_time,
-                        "ticket": getattr(pos, "ticket", None),
-                        "ok": ok,
-                        "res": (res._asdict() if hasattr(res, "_asdict") else str(res)),
-                    })
-                    if ok:
-                        state.entry_candle_time = None
-                        state.max_exit_candle_time = None
-                        state.side = None
-                        state.sl = None
-                        state.tp = None
-            # While in a position, do not evaluate new entries
+        # =========================
+        # Manage ALL open positions first (time exit)
+        # =========================
+        open_positions = get_open_positions_on_symbol(MT5_SYMBOL)
+
+        # Ensure we have meta for any live ticket (important after restart)
+        for p in open_positions:
+            ticket = str(getattr(p, "ticket", ""))
+            if not ticket:
+                continue
+
+            if ticket not in state.pos_meta:
+                # derive opened time from MT5 position if possible
+                opened_epoch = getattr(p, "time", None)
+                if opened_epoch:
+                    opened_dt = datetime.fromtimestamp(int(opened_epoch), tz=timezone.utc)
+                else:
+                    opened_dt = datetime.now(timezone.utc)
+
+                state.pos_meta[ticket] = {
+                    "opened_time_utc": fmt_z_time(opened_dt),
+                    "side": "long" if p.type == mt5.POSITION_TYPE_BUY else "short",
+                    "max_exit_candle_time": fmt_z_time(opened_dt + timedelta(minutes=MAX_HOLD_MINUTES)),
+                }
+
+        # Time-exit any tickets that exceeded their max hold
+        if open_positions:
+            for p in list(open_positions):
+                ticket = str(getattr(p, "ticket", ""))
+                meta = state.pos_meta.get(ticket, {})
+                mx = meta.get("max_exit_candle_time")
+                if mx:
+                    try:
+                        max_exit_dt = parse_z_time(mx)
+                    except Exception:
+                        max_exit_dt = candle_dt + timedelta(minutes=MAX_HOLD_MINUTES)
+
+                    if candle_dt >= max_exit_dt:
+                        ok, res = close_position_market(p, "max_hold")
+                        append_trade_log({
+                            "event": "TIME_EXIT",
+                            "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                            "candle_time": candle_time,
+                            "ticket": ticket,
+                            "ok": ok,
+                            "res": (res._asdict() if hasattr(res, "_asdict") else str(res)),
+                            "open_count_before": len(open_positions),
+                        })
+                        if ok:
+                            state.pos_meta.pop(ticket, None)
+
+        # Refresh after any closes
+        open_positions = get_open_positions_on_symbol(MT5_SYMBOL)
+
+        # Capacity check (same style as backtest)
+        remaining = MAX_OPEN_POSITIONS - len(open_positions)
+        entries_this_candle = 0
+
+        if remaining <= 0:
+            # match backtest behavior: skip entry evaluation when full
             continue
+
+        def capacity_refresh() -> Tuple[List[mt5.TradePosition], int]:
+            poss_now = get_open_positions_on_symbol(MT5_SYMBOL)
+            rem = MAX_OPEN_POSITIONS - len(poss_now)
+            return poss_now, rem
+
 
         # Retest counting (now happens for EVERY new candle)
         if buy_wall is not None and l <= buy_wall + TOUCH_DIST:
@@ -1080,26 +1158,89 @@ def maybe_process_new_candles_and_trade(state: BotState) -> None:
                             "tp": tp,
                             "volume": vol,
                             "wall_time": wall_time,
+                            "open_count": len(open_positions),
+                            "remaining": remaining,
+                            "max_open_positions": MAX_OPEN_POSITIONS,
+                            "max_entries_per_candle": MAX_ENTRIES_PER_CANDLE,
                         })
 
                         if not SIGNALS_ONLY and vol > 0:
-                            ok, res = send_market_order(MT5_SYMBOL, "short", vol, sl, tp,
-                                                        comment=f"WBv2EMA S EMA{EMA_SPAN}")
+                            # hard cap check (do not exceed max open positions)
+                            poss_now, rem_now = capacity_refresh()
+                            if len(poss_now) >= MAX_OPEN_POSITIONS:
+                                append_trade_log({
+                                    "event": "ENTRY_BLOCKED_MAX_OPEN",
+                                    "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                    "candle_time": candle_time,
+                                    "side": "short",
+                                    "open_count": len(poss_now),
+                                    "remaining": rem_now,
+                                    "max_open_positions": MAX_OPEN_POSITIONS,
+                                })
+                                continue
+
+                            # per-candle entry limit
+                            if entries_this_candle >= MAX_ENTRIES_PER_CANDLE:
+                                append_trade_log({
+                                    "event": "ENTRY_BLOCKED_MAX_ENTRIES_PER_CANDLE",
+                                    "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                    "candle_time": candle_time,
+                                    "side": "short",
+                                    "entries_this_candle": entries_this_candle,
+                                    "max_entries_per_candle": MAX_ENTRIES_PER_CANDLE,
+                                })
+                                continue
+
+                            before_tickets = {str(getattr(p, "ticket", "")) for p in poss_now}
+
+                            ok, res = send_market_order(
+                                MT5_SYMBOL, "short", vol, sl, tp,
+                                comment=f"WBv2EMA S EMA{EMA_SPAN}"
+                            )
 
                             append_trade_log({
                                 "event": "ORDER_SHORT",
                                 "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                "candle_time": candle_time,
                                 "ok": ok,
                                 "res": (res._asdict() if hasattr(res, "_asdict") else str(res)),
-                                "vol": vol
+                                "vol": vol,
+                                "open_count_before": len(poss_now),
+                                "remaining_before": rem_now,
+                                "max_open_positions": MAX_OPEN_POSITIONS,
                             })
 
                             if ok:
-                                state.entry_candle_time = candle_time
-                                state.max_exit_candle_time = fmt_z_time(candle_dt + timedelta(minutes=MAX_HOLD_MINUTES))
-                                state.side = "short"
-                                state.sl = sl
-                                state.tp = tp
+                                # refresh positions & store meta for newest ticket
+                                poss_after, rem_after = capacity_refresh()
+                                after_tickets = {str(getattr(p, "ticket", "")) for p in poss_after}
+
+                                new_tickets = list(after_tickets - before_tickets)
+                                ticket = new_tickets[0] if new_tickets else ""
+
+                                if ticket:
+                                    state.pos_meta[ticket] = {
+                                        "opened_time_utc": fmt_z_time(candle_dt),
+                                        "side": "short",
+                                        "max_exit_candle_time": fmt_z_time(
+                                            candle_dt + timedelta(minutes=MAX_HOLD_MINUTES)),
+                                    }
+
+                                entries_this_candle += 1
+                                remaining = rem_after
+
+                                append_trade_log({
+                                    "event": "ENTRY_ACCEPTED",
+                                    "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                    "candle_time": candle_time,
+                                    "side": "short",
+                                    "ticket": ticket or None,
+                                    "open_count_after": len(poss_after),
+                                    "remaining_after": rem_after,
+                                    "max_open_positions": MAX_OPEN_POSITIONS,
+                                    "entries_this_candle": entries_this_candle,
+                                })
+
                                 state.retests_buy = 0
                     continue
 
@@ -1150,26 +1291,88 @@ def maybe_process_new_candles_and_trade(state: BotState) -> None:
                             "tp": tp,
                             "volume": vol,
                             "wall_time": wall_time,
+                            "open_count": len(open_positions),
+                            "remaining": remaining,
+                            "max_open_positions": MAX_OPEN_POSITIONS,
+                            "max_entries_per_candle": MAX_ENTRIES_PER_CANDLE,
                         })
 
                         if not SIGNALS_ONLY and vol > 0:
-                            ok, res = send_market_order(MT5_SYMBOL, "long", vol, sl, tp,
-                                                        comment=f"WBv2EMA L EMA{EMA_SPAN}")
+                            # hard cap check (do not exceed max open positions)
+                            poss_now, rem_now = capacity_refresh()
+                            if len(poss_now) >= MAX_OPEN_POSITIONS:
+                                append_trade_log({
+                                    "event": "ENTRY_BLOCKED_MAX_OPEN",
+                                    "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                    "candle_time": candle_time,
+                                    "side": "long",
+                                    "open_count": len(poss_now),
+                                    "remaining": rem_now,
+                                    "max_open_positions": MAX_OPEN_POSITIONS,
+                                })
+                                continue
+
+                            # per-candle entry limit
+                            if entries_this_candle >= MAX_ENTRIES_PER_CANDLE:
+                                append_trade_log({
+                                    "event": "ENTRY_BLOCKED_MAX_ENTRIES_PER_CANDLE",
+                                    "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                    "candle_time": candle_time,
+                                    "side": "long",
+                                    "entries_this_candle": entries_this_candle,
+                                    "max_entries_per_candle": MAX_ENTRIES_PER_CANDLE,
+                                })
+                                continue
+
+                            before_tickets = {str(getattr(p, "ticket", "")) for p in poss_now}
+
+                            ok, res = send_market_order(
+                                MT5_SYMBOL, "long", vol, sl, tp,
+                                comment=f"WBv2EMA L EMA{EMA_SPAN}"
+                            )
 
                             append_trade_log({
                                 "event": "ORDER_LONG",
                                 "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                "candle_time": candle_time,
                                 "ok": ok,
                                 "res": (res._asdict() if hasattr(res, "_asdict") else str(res)),
-                                "vol": vol
+                                "vol": vol,
+                                "open_count_before": len(poss_now),
+                                "remaining_before": rem_now,
+                                "max_open_positions": MAX_OPEN_POSITIONS,
                             })
 
                             if ok:
-                                state.entry_candle_time = candle_time
-                                state.max_exit_candle_time = fmt_z_time(candle_dt + timedelta(minutes=MAX_HOLD_MINUTES))
-                                state.side = "long"
-                                state.sl = sl
-                                state.tp = tp
+                                poss_after, rem_after = capacity_refresh()
+                                after_tickets = {str(getattr(p, "ticket", "")) for p in poss_after}
+
+                                new_tickets = list(after_tickets - before_tickets)
+                                ticket = new_tickets[0] if new_tickets else ""
+
+                                if ticket:
+                                    state.pos_meta[ticket] = {
+                                        "opened_time_utc": fmt_z_time(candle_dt),
+                                        "side": "long",
+                                        "max_exit_candle_time": fmt_z_time(
+                                            candle_dt + timedelta(minutes=MAX_HOLD_MINUTES)),
+                                    }
+
+                                entries_this_candle += 1
+                                remaining = rem_after
+
+                                append_trade_log({
+                                    "event": "ENTRY_ACCEPTED",
+                                    "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
+                                    "candle_time": candle_time,
+                                    "side": "long",
+                                    "ticket": ticket or None,
+                                    "open_count_after": len(poss_after),
+                                    "remaining_after": rem_after,
+                                    "max_open_positions": MAX_OPEN_POSITIONS,
+                                    "entries_this_candle": entries_this_candle,
+                                })
+
                                 state.retests_sell = 0
                     continue
 
@@ -1187,7 +1390,8 @@ def main():
     print(f"[BOOKS] step={BOOK_STEP_SECONDS}s grace={BOOK_GRACE_SECONDS}s retry={BOOK_RETRY_EVERY_SECONDS}s range=±{BOOK_RANGE_DOLLARS} total_min={WALL_TOTAL_MIN} imb_min={WALL_IMB_MIN}")
     print(f"[CAND]  step={CANDLE_STEP_SECONDS}s wake_delay={CANDLE_WAKE_DELAY_SEC}s grace={CANDLE_GRACE_SECONDS}s retry={CANDLE_RETRY_EVERY}s")
     print(f"[STRAT] EMA={EMA_SPAN} MIN_DIST={MIN_EMA_DIST} RET={RETESTS_REQUIRED} TOUCH={TOUCH_DIST} BREAK={BREAK_BUFFER} STOP={STOP_BUFFER} TP_R={TP_R} MWD={MAX_WALL_DISTANCE}")
-    print(f"[EXEC]  MT5={MT5_SERVER} {MT5_SYMBOL} risk_cash={RISK_CASH} max_hold={MAX_HOLD_MINUTES} signals_only={SIGNALS_ONLY}\n")
+    print(f"[EXEC]  MT5={MT5_SERVER} {MT5_SYMBOL} risk_cash={RISK_CASH} max_hold={MAX_HOLD_MINUTES} "
+          f"max_open={MAX_OPEN_POSITIONS} max_entries_per_candle={MAX_ENTRIES_PER_CANDLE} signals_only={SIGNALS_ONLY}\n")
 
     init_mt5()
     state = BotState()
@@ -1207,6 +1411,9 @@ def main():
             "dt_utc": fmt_z_time(datetime.now(timezone.utc)),
             "note": "no state.json found; starting fresh",
         })
+
+    if state.pos_meta is None or not isinstance(state.pos_meta, dict):
+        state.pos_meta = {}
 
     # create live log header
     if not TRADES_JSONL.exists():
