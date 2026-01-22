@@ -1,0 +1,33 @@
+{
+  "instrument": "XAU_USD",
+  "last_saved_book_time": "2026-01-21T16:40:00Z",
+  "next_books_wake_utc": "2026-01-21T17:00:05Z",
+  "last_saved_candle_time": null,
+  "next_candle_wake_utc": "2026-01-21T17:00:08Z",
+  "last_processed_candle_time": null,
+  "last_wall_time": null,
+  "retests_buy": 0,
+  "retests_sell": 0,
+  "last_entry_candle_time": null,
+  "last_walls_row": {
+    "time": "2026-01-21T16:40:00Z",
+    "ref_price": 4846.765,
+    "bucket_width": 0.5,
+    "buy_wall_price": 4858.5,
+    "buy_strength": 0.1207,
+    "buy_imbalance": 0.1207,
+    "buy_long": 0.1207,
+    "buy_short": 0.0,
+    "buy_total": 0.1207,
+    "sell_wall_price": 4827.0,
+    "sell_strength": 0.0905,
+    "sell_imbalance": -0.0905,
+    "sell_long": 0.0,
+    "sell_short": 0.0905,
+    "sell_total": 0.0905
+  },
+  "last_walls_time": "2026-01-21T16:40:00Z",
+  "pos_meta": {},
+  "tick_n": 0,
+  "saved_at_utc": "2026-01-21T16:54:46Z"
+}

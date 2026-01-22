@@ -1,0 +1,2 @@
+{"event": "STATE_NEW", "dt_utc": "2026-01-21T16:54:25Z", "note": "no state.json found; starting fresh", "schema_version": 1}
+{"event": "BOOKS_SAVED", "dt_utc": "2026-01-21T16:54:26Z", "book_time": "2026-01-21T16:40:00Z", "ref_price": 4846.765, "buy_wall": 4858.5, "sell_wall": 4827.0, "attempts": 1, "schema_version": 1}
