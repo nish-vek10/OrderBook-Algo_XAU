@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-bot_walBO_trail_limits-XAU.py
+bot_wallBO_trail_limits-XAU.py
 ======================================
 
 v3 = Script A parity + Script B trailing + LIMIT orders (books-driven)
