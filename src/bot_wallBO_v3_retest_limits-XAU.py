@@ -363,12 +363,20 @@ def init_mt5() -> None:
     global SYMBOL_INFO
     if not mt5.initialize(path=MT5_TERMINAL_PATH, login=MT5_LOGIN, password=MT5_PASSWORD, server=MT5_SERVER):
         raise RuntimeError(f"mt5.initialize() failed: {mt5.last_error()}")
+
     if not mt5.symbol_select(MT5_SYMBOL, True):
         raise RuntimeError(f"symbol_select failed: {MT5_SYMBOL}")
+
     info = mt5.symbol_info(MT5_SYMBOL)
     if info is None:
         raise RuntimeError("symbol_info None")
     SYMBOL_INFO = info
+
+    acc = mt5.account_info()
+    print(f"[MT5] Connected login={acc.login} server={MT5_SERVER}")
+    print(f"[MT5] balance={acc.balance:.2f} equity={acc.equity:.2f} margin_free={getattr(acc, 'margin_free', 0.0):.2f}")
+    print(f"[MT5] {MT5_SYMBOL} digits={info.digits} point={info.point} vol_min={info.volume_min} vol_max={info.volume_max} step={info.volume_step}")
+    print(f"[MT5] filling_mode={getattr(info, 'filling_mode', None)} trade_fill_mode={getattr(info, 'trade_fill_mode', None)}")
 
 def shutdown_mt5() -> None:
     mt5.shutdown()
@@ -598,6 +606,9 @@ def maybe_run_books_logger(state: BotState) -> None:
                 "sell_wall": walls_row.get("sell_wall_price"),
             })
 
+            print(
+                f"[BOOKS] NEW {t_ob} ref={p_ob} BUY={walls_row.get('buy_wall_price')} SELL={walls_row.get('sell_wall_price')}")
+
             # expiry rule: cancel all pending
             if ENABLE_LIMITS:
                 for o in get_pending_orders_on_symbol(MT5_SYMBOL):
@@ -624,6 +635,7 @@ def maybe_run_books_logger(state: BotState) -> None:
             return
         except Exception as e:
             append_trade_log({"event": "BOOKS_ERR", "err": str(e)})
+            print(f"[BOOKS] ERR: {e}")
             time.sleep(BOOK_RETRY_EVERY_SECONDS)
 
     state.next_books_wake_utc = fmt_z_time(datetime.now(timezone.utc) + timedelta(seconds=10))
@@ -705,6 +717,8 @@ def place_quant_clean_limits(*, state: BotState, walls_row: dict, book_time: str
             "retests_sell": ret_s,
             "required": LIMIT_RETESTS_REQUIRED,
         })
+        print(
+            f"[LIMIT] SKIP (retests not met) buy={ret_b}/{LIMIT_RETESTS_REQUIRED} sell={ret_s}/{LIMIT_RETESTS_REQUIRED}")
         return
 
     # both sides, but cap left
@@ -750,6 +764,12 @@ def place_quant_clean_limits(*, state: BotState, walls_row: dict, book_time: str
             "retests_buy": ret_b,
             "retests_sell": ret_s,
         })
+
+        if ok:
+            print(f"[LIMIT] PLACE {side.upper()} entry={entry:.3f} sl={sl:.3f} tp={tp:.3f} vol={vol}")
+        else:
+            print(f"[LIMIT] FAIL  {side.upper()} res={res}")
+
 
 # =========================
 # Candles logger
@@ -802,12 +822,15 @@ def maybe_run_candles_logger(state: BotState) -> None:
             state.last_saved_candle_time = new[-1]["time"]
 
             append_trade_log({"event": "CANDLES_SAVED", "n_new": len(new), "newest": state.last_saved_candle_time})
+            print(f"[CANDLES] +{len(new)} newest={state.last_saved_candle_time}")
 
             boundary = next_boundary(datetime.now(timezone.utc), CANDLE_STEP_SECONDS)
             state.next_candle_wake_utc = fmt_z_time(boundary + timedelta(seconds=CANDLE_WAKE_DELAY_SEC))
             return
+
         except Exception as e:
             append_trade_log({"event": "CANDLES_ERR", "err": str(e)})
+            print(f"[CANDLES] ERR: {e}")
             time.sleep(CANDLE_RETRY_EVERY)
 
     state.next_candle_wake_utc = fmt_z_time(datetime.now(timezone.utc) + timedelta(seconds=10))
@@ -946,6 +969,26 @@ def maybe_process_new_candles_and_trade(state: BotState) -> None:
 # Main
 # =========================
 def main():
+    print("\n=== WBv3 RETEST-LIMITS BOT ===")
+    print(f"[ROOT] {BASE_DIR}")
+    print(f"[ASSET] {ASSET_TAG}")
+    print(f"[STRAT] {STRATEGY_TAG}")
+    print(f"[OANDA] api={OANDA_API_URL} instrument={INSTRUMENT}")
+    print(f"[BOOKS] step={BOOK_STEP_SECONDS}s grace={BOOK_GRACE_SECONDS}s retry={BOOK_RETRY_EVERY_SECONDS}s "
+          f"range=±{BOOK_RANGE_DOLLARS} total_min={WALL_TOTAL_MIN} imb_min={WALL_IMB_MIN}")
+    print(f"[CAND]  step={CANDLE_STEP_SECONDS}s wake_delay={CANDLE_WAKE_DELAY_SEC}s "
+          f"grace={CANDLE_GRACE_SECONDS}s retry={CANDLE_RETRY_EVERY}s")
+    print(f"[BREAK] EMA={EMA_SPAN} MIN_DIST={MIN_EMA_DIST} RET={RETESTS_REQUIRED} TOUCH={TOUCH_DIST} "
+          f"BREAK={BREAK_BUFFER} STOP={STOP_BUFFER} TP_R={TP_R} MWD={MAX_WALL_DISTANCE}")
+    print(f"[LIM]   enabled={ENABLE_LIMITS} both_sides={PLACE_BOTH_SIDES_LIMITS} require_retests={LIMIT_REQUIRE_RETESTS} "
+          f"ret_req={LIMIT_RETESTS_REQUIRED} offset={LIMIT_ENTRY_OFFSET} max_dist_mkt={LIMIT_MAX_DIST_FROM_MKT}")
+    print(f"[TRAIL] enabled={ENABLE_TRAILING} start_R={TRAIL_START_R} BE_buf={BE_BUFFER} "
+          f"ATR_p={ATR_TRAIL_PERIOD} ATR_mult={ATR_TRAIL_MULT}")
+    print(f"[RISK]  risk_cash={RISK_CASH} max_hold={MAX_HOLD_MINUTES} max_open={MAX_OPEN_POSITIONS} "
+          f"max_entries_per_candle={MAX_ENTRIES_PER_CANDLE} deviation={DEVIATION} magic={MAGIC}")
+    print(f"[EXEC]  MT5={MT5_SERVER} symbol={MT5_SYMBOL} terminal={MT5_TERMINAL_PATH}")
+    print("")
+
     init_mt5()
     state = BotState()
 
