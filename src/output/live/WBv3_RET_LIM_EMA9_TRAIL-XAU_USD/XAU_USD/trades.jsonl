@@ -1,0 +1,3 @@
+{"event": "INIT", "note": "quant-clean retest limits bot started", "schema_version": 3, "dt_utc": "2026-01-28T16:04:21Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T16:00:00Z", "ref_price": 5278.28, "buy_wall": null, "sell_wall": 5300.0, "schema_version": 3, "dt_utc": "2026-01-28T16:04:21Z"}
+{"event": "LIMIT_SKIP_NO_CTX", "book_time": "2026-01-28T16:00:00Z", "schema_version": 3, "dt_utc": "2026-01-28T16:04:21Z"}

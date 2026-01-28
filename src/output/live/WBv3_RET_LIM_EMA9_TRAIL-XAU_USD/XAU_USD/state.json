@@ -1,0 +1,15 @@
+{
+  "instrument": "XAU_USD",
+  "last_saved_book_time": "2026-01-28T16:00:00Z",
+  "next_books_wake_utc": "2026-01-28T16:20:05Z",
+  "last_saved_candle_time": null,
+  "next_candle_wake_utc": "2026-01-28T16:20:08Z",
+  "last_processed_candle_time": null,
+  "last_wall_time": null,
+  "retests_buy": 0,
+  "retests_sell": 0,
+  "last_retest_ctx": {},
+  "last_entry_candle_time": null,
+  "pos_meta": {},
+  "saved_at_utc": "2026-01-28T16:04:38Z"
+}

@@ -34,7 +34,7 @@ from pytz import timezone as pytz_timezone
 MT5_LOGIN         = 52710798
 MT5_PASSWORD      = "0D0PCajle$p6Le"
 MT5_SERVER        = "ICMarketsSC-Demo"
-MT5_TERMINAL_PATH = r"C:\MT5\ALGO-OrderBook_XAU\terminal64.exe"
+MT5_TERMINAL_PATH = r"C:\MT5\ALGO-OrderBook_XAU-v3-reset_limits\terminal64.exe"
 
 LOCAL_TZ   = pytz_timezone("Europe/London")
 MT5_SYMBOL = "XAUUSD"

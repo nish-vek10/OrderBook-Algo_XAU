@@ -1,0 +1,2 @@
+time,ref_price,bucket_width,buy_wall_price,buy_strength,buy_imbalance,buy_long,buy_short,buy_total,sell_wall_price,sell_strength,sell_imbalance,sell_long,sell_short,sell_total
+2026-01-28T16:00:00Z,5278.28,0.5,,,,,,,5300.0,0.1249,-0.1249,0.0,0.1249,0.1249
