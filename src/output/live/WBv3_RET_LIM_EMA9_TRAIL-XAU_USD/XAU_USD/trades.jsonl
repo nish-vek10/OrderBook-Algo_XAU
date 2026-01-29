@@ -1,3 +1,87 @@
 {"event": "INIT", "note": "quant-clean retest limits bot started", "schema_version": 3, "dt_utc": "2026-01-28T16:04:21Z"}
 {"event": "BOOKS_SAVED", "book_time": "2026-01-28T16:00:00Z", "ref_price": 5278.28, "buy_wall": null, "sell_wall": 5300.0, "schema_version": 3, "dt_utc": "2026-01-28T16:04:21Z"}
 {"event": "LIMIT_SKIP_NO_CTX", "book_time": "2026-01-28T16:00:00Z", "schema_version": 3, "dt_utc": "2026-01-28T16:04:21Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T16:20:00Z", "ref_price": 5287.595, "buy_wall": null, "sell_wall": 5300.0, "schema_version": 3, "dt_utc": "2026-01-28T16:20:06Z"}
+{"event": "LIMIT_SKIP_NO_CTX", "book_time": "2026-01-28T16:20:00Z", "schema_version": 3, "dt_utc": "2026-01-28T16:20:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T16:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T16:20:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T16:40:00Z", "ref_price": 5283.19, "buy_wall": null, "sell_wall": 5300.0, "schema_version": 3, "dt_utc": "2026-01-28T16:40:05Z"}
+{"event": "LIMIT_SKIP_NO_CTX", "book_time": "2026-01-28T16:40:00Z", "schema_version": 3, "dt_utc": "2026-01-28T16:40:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T16:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T16:40:09Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T17:00:00Z", "ref_price": 5299.875, "buy_wall": null, "sell_wall": 5303.0, "schema_version": 3, "dt_utc": "2026-01-28T17:00:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T17:00:00Z", "ctx_wall_time": "2026-01-28T16:20:00Z", "books_wall_time": "2026-01-28T17:00:00Z", "schema_version": 3, "dt_utc": "2026-01-28T17:00:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T16:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T17:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T17:20:00Z", "ref_price": 5293.365, "buy_wall": 5310.0, "sell_wall": 5314.5, "schema_version": 3, "dt_utc": "2026-01-28T17:20:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T17:20:00Z", "ctx_wall_time": "2026-01-28T16:40:00Z", "books_wall_time": "2026-01-28T17:20:00Z", "schema_version": 3, "dt_utc": "2026-01-28T17:20:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T17:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T17:20:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T17:40:00Z", "ref_price": 5284.895, "buy_wall": null, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-28T17:40:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T17:40:00Z", "ctx_wall_time": "2026-01-28T17:00:00Z", "books_wall_time": "2026-01-28T17:40:00Z", "schema_version": 3, "dt_utc": "2026-01-28T17:40:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T17:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T17:40:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T18:00:00Z", "ref_price": 5298.11, "buy_wall": 5310.0, "sell_wall": 5311.0, "schema_version": 3, "dt_utc": "2026-01-28T18:00:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T18:00:00Z", "ctx_wall_time": "2026-01-28T17:20:00Z", "books_wall_time": "2026-01-28T18:00:00Z", "schema_version": 3, "dt_utc": "2026-01-28T18:00:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T17:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T18:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T18:20:00Z", "ref_price": 5310.41, "buy_wall": null, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-28T18:20:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T18:20:00Z", "ctx_wall_time": "2026-01-28T17:40:00Z", "books_wall_time": "2026-01-28T18:20:00Z", "schema_version": 3, "dt_utc": "2026-01-28T18:20:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T18:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T18:20:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T18:40:00Z", "ref_price": 5274.17, "buy_wall": null, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-28T18:40:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T18:40:00Z", "ctx_wall_time": "2026-01-28T18:00:00Z", "books_wall_time": "2026-01-28T18:40:00Z", "schema_version": 3, "dt_utc": "2026-01-28T18:40:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T18:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T18:40:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T19:00:00Z", "ref_price": 5282.595, "buy_wall": null, "sell_wall": 5270.0, "schema_version": 3, "dt_utc": "2026-01-28T19:00:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T19:00:00Z", "ctx_wall_time": "2026-01-28T18:20:00Z", "books_wall_time": "2026-01-28T19:00:00Z", "schema_version": 3, "dt_utc": "2026-01-28T19:00:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T18:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T19:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T19:20:00Z", "ref_price": 5296.75, "buy_wall": 5310.0, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-28T19:20:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T19:20:00Z", "ctx_wall_time": "2026-01-28T18:40:00Z", "books_wall_time": "2026-01-28T19:20:00Z", "schema_version": 3, "dt_utc": "2026-01-28T19:20:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T19:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T19:20:09Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T19:40:00Z", "ref_price": 5301.035, "buy_wall": 5310.0, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-28T19:40:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T19:40:00Z", "ctx_wall_time": "2026-01-28T19:00:00Z", "books_wall_time": "2026-01-28T19:40:00Z", "schema_version": 3, "dt_utc": "2026-01-28T19:40:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T19:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T19:40:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T20:00:00Z", "ref_price": 5325.42, "buy_wall": null, "sell_wall": 5350.0, "schema_version": 3, "dt_utc": "2026-01-28T20:00:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T20:00:00Z", "ctx_wall_time": "2026-01-28T19:20:00Z", "books_wall_time": "2026-01-28T20:00:00Z", "schema_version": 3, "dt_utc": "2026-01-28T20:00:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T19:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T20:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T20:20:00Z", "ref_price": 5338.735, "buy_wall": null, "sell_wall": 5350.0, "schema_version": 3, "dt_utc": "2026-01-28T20:20:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T20:20:00Z", "ctx_wall_time": "2026-01-28T19:40:00Z", "books_wall_time": "2026-01-28T20:20:00Z", "schema_version": 3, "dt_utc": "2026-01-28T20:20:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T20:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T20:20:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T20:40:00Z", "ref_price": 5376.43, "buy_wall": 5381.5, "sell_wall": 5380.0, "schema_version": 3, "dt_utc": "2026-01-28T20:40:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T20:40:00Z", "ctx_wall_time": "2026-01-28T20:00:00Z", "books_wall_time": "2026-01-28T20:40:00Z", "schema_version": 3, "dt_utc": "2026-01-28T20:40:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T20:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T20:40:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T21:00:00Z", "ref_price": 5376.965, "buy_wall": 5400.0, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-28T21:00:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T21:00:00Z", "ctx_wall_time": "2026-01-28T20:20:00Z", "books_wall_time": "2026-01-28T21:00:00Z", "schema_version": 3, "dt_utc": "2026-01-28T21:00:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T20:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T21:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-28T21:20:00Z", "ref_price": 5386.22, "buy_wall": null, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-28T21:20:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-28T21:20:00Z", "ctx_wall_time": "2026-01-28T20:40:00Z", "books_wall_time": "2026-01-28T21:20:00Z", "schema_version": 3, "dt_utc": "2026-01-28T21:20:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-28T21:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-28T21:20:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T11:00:00Z", "ref_price": 5483.705, "buy_wall": null, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-29T11:01:11Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T11:00:00Z", "ctx_wall_time": "2026-01-28T21:00:00Z", "books_wall_time": "2026-01-29T11:00:00Z", "schema_version": 3, "dt_utc": "2026-01-29T11:01:11Z"}
+{"event": "CANDLES_SAVED", "n_new": 757, "newest": "2026-01-29T11:00:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T11:01:12Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T11:20:00Z", "ref_price": 5507.305, "buy_wall": null, "sell_wall": 5513.0, "schema_version": 3, "dt_utc": "2026-01-29T11:20:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T11:20:00Z", "ctx_wall_time": "2026-01-29T11:00:00Z", "books_wall_time": "2026-01-29T11:20:00Z", "schema_version": 3, "dt_utc": "2026-01-29T11:20:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 19, "newest": "2026-01-29T11:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T11:20:09Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T11:40:00Z", "ref_price": 5509.885, "buy_wall": 5514.0, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-29T11:40:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T11:40:00Z", "ctx_wall_time": "2026-01-29T11:00:00Z", "books_wall_time": "2026-01-29T11:40:00Z", "schema_version": 3, "dt_utc": "2026-01-29T11:40:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T11:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T11:40:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T12:00:00Z", "ref_price": 5522.62, "buy_wall": 5529.5, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-29T12:00:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T12:00:00Z", "ctx_wall_time": "2026-01-29T11:20:00Z", "books_wall_time": "2026-01-29T12:00:00Z", "schema_version": 3, "dt_utc": "2026-01-29T12:00:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T11:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T12:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T12:20:00Z", "ref_price": 5531.98, "buy_wall": 5540.0, "sell_wall": 5549.0, "schema_version": 3, "dt_utc": "2026-01-29T12:20:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T12:20:00Z", "ctx_wall_time": "2026-01-29T11:40:00Z", "books_wall_time": "2026-01-29T12:20:00Z", "schema_version": 3, "dt_utc": "2026-01-29T12:20:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T12:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T12:20:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T12:40:00Z", "ref_price": 5532.055, "buy_wall": 5533.5, "sell_wall": 5549.0, "schema_version": 3, "dt_utc": "2026-01-29T12:40:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T12:40:00Z", "ctx_wall_time": "2026-01-29T12:00:00Z", "books_wall_time": "2026-01-29T12:40:00Z", "schema_version": 3, "dt_utc": "2026-01-29T12:40:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T12:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T12:40:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T13:00:00Z", "ref_price": 5534.125, "buy_wall": 5543.5, "sell_wall": 5549.0, "schema_version": 3, "dt_utc": "2026-01-29T13:00:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T13:00:00Z", "ctx_wall_time": "2026-01-29T12:20:00Z", "books_wall_time": "2026-01-29T13:00:00Z", "schema_version": 3, "dt_utc": "2026-01-29T13:00:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T12:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T13:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T13:20:00Z", "ref_price": 5518.26, "buy_wall": 5527.0, "sell_wall": 5507.5, "schema_version": 3, "dt_utc": "2026-01-29T13:20:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T13:20:00Z", "ctx_wall_time": "2026-01-29T12:40:00Z", "books_wall_time": "2026-01-29T13:20:00Z", "schema_version": 3, "dt_utc": "2026-01-29T13:20:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T13:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T13:20:09Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T13:40:00Z", "ref_price": 5517.94, "buy_wall": 5525.0, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-29T13:40:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T13:40:00Z", "ctx_wall_time": "2026-01-29T13:00:00Z", "books_wall_time": "2026-01-29T13:40:00Z", "schema_version": 3, "dt_utc": "2026-01-29T13:40:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T13:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T13:40:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T14:00:00Z", "ref_price": 5510.785, "buy_wall": 5513.5, "sell_wall": 5497.5, "schema_version": 3, "dt_utc": "2026-01-29T14:00:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T14:00:00Z", "ctx_wall_time": "2026-01-29T13:20:00Z", "books_wall_time": "2026-01-29T14:00:00Z", "schema_version": 3, "dt_utc": "2026-01-29T14:00:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T13:59:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T14:00:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T14:20:00Z", "ref_price": 5523.735, "buy_wall": 5527.0, "sell_wall": 5506.5, "schema_version": 3, "dt_utc": "2026-01-29T14:20:06Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T14:20:00Z", "ctx_wall_time": "2026-01-29T13:40:00Z", "books_wall_time": "2026-01-29T14:20:00Z", "schema_version": 3, "dt_utc": "2026-01-29T14:20:06Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T14:19:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T14:20:08Z"}
+{"event": "BOOKS_SAVED", "book_time": "2026-01-29T14:40:00Z", "ref_price": 5531.855, "buy_wall": 5538.5, "sell_wall": null, "schema_version": 3, "dt_utc": "2026-01-29T14:40:05Z"}
+{"event": "LIMIT_SKIP_CTX_WALL_MISMATCH", "book_time": "2026-01-29T14:40:00Z", "ctx_wall_time": "2026-01-29T14:00:00Z", "books_wall_time": "2026-01-29T14:40:00Z", "schema_version": 3, "dt_utc": "2026-01-29T14:40:05Z"}
+{"event": "CANDLES_SAVED", "n_new": 20, "newest": "2026-01-29T14:39:00.000000000Z", "schema_version": 3, "dt_utc": "2026-01-29T14:40:09Z"}

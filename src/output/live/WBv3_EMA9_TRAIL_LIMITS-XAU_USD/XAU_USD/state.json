@@ -1,15 +1,80 @@
 {
   "instrument": "XAU_USD",
-  "last_saved_book_time": "2026-01-28T16:00:00Z",
-  "next_books_wake_utc": "2026-01-28T16:20:05Z",
-  "last_saved_candle_time": null,
-  "next_candle_wake_utc": "2026-01-28T16:20:08Z",
-  "last_processed_candle_time": null,
-  "last_wall_time": null,
-  "retests_buy": 0,
-  "retests_sell": 0,
-  "last_entry_candle_time": null,
-  "pos_meta": {},
-  "tick_n": 0,
-  "saved_at_utc": "2026-01-28T16:04:38Z"
+  "last_saved_book_time": "2026-01-29T14:40:00Z",
+  "next_books_wake_utc": "2026-01-29T15:00:05Z",
+  "last_saved_candle_time": "2026-01-29T14:39:00.000000000Z",
+  "next_candle_wake_utc": "2026-01-29T15:00:08Z",
+  "last_processed_candle_time": "2026-01-29T14:39:00.000000000Z",
+  "last_wall_time": "2026-01-29T14:20:00Z",
+  "retests_buy": 11,
+  "retests_sell": 20,
+  "last_entry_candle_time": "2026-01-29T13:17:00.000000000Z",
+  "pos_meta": {
+    "1435527637": {
+      "opened_time_utc": "2026-01-28T22:40:09Z",
+      "side": "long",
+      "entry": 5379.79,
+      "initial_sl": 5349.0,
+      "risk_per_unit": 30.789999999999964,
+      "max_exit_candle_time": "2026-01-29T01:40:09Z"
+    },
+    "1435527711": {
+      "opened_time_utc": "2026-01-28T22:40:09Z",
+      "side": "long",
+      "entry": 5379.59,
+      "initial_sl": 5349.0,
+      "risk_per_unit": 30.590000000000146,
+      "max_exit_candle_time": "2026-01-29T01:40:09Z"
+    },
+    "1435588058": {
+      "opened_time_utc": "2026-01-28T23:00:08Z",
+      "side": "long",
+      "entry": 5382.64,
+      "initial_sl": 5379.0,
+      "risk_per_unit": 3.6400000000003274,
+      "max_exit_candle_time": "2026-01-29T02:00:08Z"
+    },
+    "1437449758": {
+      "opened_time_utc": "2026-01-29T14:40:08Z",
+      "side": "short",
+      "entry": 5532.64,
+      "initial_sl": 5541.0,
+      "risk_per_unit": 8.359999999999673,
+      "max_exit_candle_time": "2026-01-29T17:40:08Z"
+    },
+    "1437496110": {
+      "opened_time_utc": "2026-01-29T15:00:09Z",
+      "side": "short",
+      "entry": 5531.31,
+      "initial_sl": 5534.5,
+      "risk_per_unit": 3.1899999999996,
+      "max_exit_candle_time": "2026-01-29T18:00:09Z"
+    },
+    "1437555526": {
+      "opened_time_utc": "2026-01-29T15:20:09Z",
+      "side": "short",
+      "entry": 5511.14,
+      "initial_sl": 5544.5,
+      "risk_per_unit": 33.35999999999967,
+      "max_exit_candle_time": "2026-01-29T18:20:09Z"
+    },
+    "1437555569": {
+      "opened_time_utc": "2026-01-29T15:20:09Z",
+      "side": "short",
+      "entry": 5511.27,
+      "initial_sl": 5544.5,
+      "risk_per_unit": 33.22999999999956,
+      "max_exit_candle_time": "2026-01-29T18:20:09Z"
+    },
+    "1437555651": {
+      "opened_time_utc": "2026-01-29T15:20:11Z",
+      "side": "short",
+      "entry": 5509.61,
+      "initial_sl": 5544.5,
+      "risk_per_unit": 34.89000000000033,
+      "max_exit_candle_time": "2026-01-29T18:20:11Z"
+    }
+  },
+  "tick_n": 596,
+  "saved_at_utc": "2026-01-29T14:47:34Z"
 }

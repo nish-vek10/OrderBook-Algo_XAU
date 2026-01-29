@@ -1,15 +1,23 @@
 {
   "instrument": "XAU_USD",
-  "last_saved_book_time": "2026-01-28T16:00:00Z",
-  "next_books_wake_utc": "2026-01-28T16:20:05Z",
-  "last_saved_candle_time": null,
-  "next_candle_wake_utc": "2026-01-28T16:20:08Z",
-  "last_processed_candle_time": null,
-  "last_wall_time": null,
-  "retests_buy": 0,
-  "retests_sell": 0,
-  "last_retest_ctx": {},
+  "last_saved_book_time": "2026-01-29T14:40:00Z",
+  "next_books_wake_utc": "2026-01-29T15:00:05Z",
+  "last_saved_candle_time": "2026-01-29T14:39:00.000000000Z",
+  "next_candle_wake_utc": "2026-01-29T15:00:08Z",
+  "last_processed_candle_time": "2026-01-29T14:39:00.000000000Z",
+  "last_wall_time": "2026-01-29T14:20:00Z",
+  "retests_buy": 11,
+  "retests_sell": 20,
+  "last_retest_ctx": {
+    "wall_time": "2026-01-29T14:20:00Z",
+    "candle_time": "2026-01-29T14:39:00.000000000Z",
+    "close": 5531.855,
+    "retests_buy": 11,
+    "retests_sell": 20,
+    "ema": 5526.72732616715,
+    "atr": 8.811980624494673
+  },
   "last_entry_candle_time": null,
   "pos_meta": {},
-  "saved_at_utc": "2026-01-28T16:04:38Z"
+  "saved_at_utc": "2026-01-29T14:47:39Z"
 }

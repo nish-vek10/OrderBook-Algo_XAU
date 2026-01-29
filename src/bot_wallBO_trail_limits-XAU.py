@@ -111,7 +111,7 @@ LIMIT_MAX_DIST_FROM_MKT  = 15.0  # avoid placing limits too far from current MT5
 ENABLE_TRAILING   = True
 
 TRAIL_START_R     = 1.0     # BE + trailing logic starts once profit >= 1R
-BE_BUFFER         = 0.50    # XAU units (0.20 = 20 cents)
+BE_BUFFER         = 0.50    # XAU units (0.50 = 50 cents)
 
 ATR_TRAIL_PERIOD  = 20
 ATR_TRAIL_MULT    = 2.5     # after BE active, trail = price -/+ ATR_MULT * ATR
