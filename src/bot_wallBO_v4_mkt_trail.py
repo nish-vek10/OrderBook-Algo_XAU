@@ -725,6 +725,81 @@ class BotState:
 # =============================================================================
 # Books logger (trimmed save + walls CSV + gap detect)
 # =============================================================================
+def fetch_and_print_books_status(state: BotState) -> None:
+    """
+    One-shot bootstrap: fetch current books ONCE and print status,
+    even if the snapshot time hasn't advanced yet.
+    Does NOT spam, does NOT loop.
+    """
+    try:
+        ob_raw, pb_raw = fetch_books()
+        t_ob, p_ob = get_book_time_and_price(ob_raw, "orderBook")
+        if not t_ob:
+            print("[BOOKS] BOOTSTRAP: no time in snapshot")
+            return
+
+        # If it's a genuinely new snapshot, save it (dedupe still respected).
+        if t_ob != state.last_saved_book_time:
+            day = day_yyyymmdd(datetime.now(timezone.utc))
+            order_path = OUT_ORDER_DIR / f"orderbook_{day}.jsonl"
+            pos_path   = OUT_POS_DIR   / f"positionbook_{day}.jsonl"
+            walls_csv  = OUT_WALLS_DIR / f"walls_{day}.csv"
+
+            ob = dict(ob_raw)
+            pb = dict(pb_raw)
+            ob["orderBook"] = trim_book_buckets(book=ob_raw.get("orderBook", {}), window=BOOK_WINDOW_AROUND_PRICE)
+            pb["positionBook"] = trim_book_buckets(book=pb_raw.get("positionBook", {}), window=BOOK_WINDOW_AROUND_PRICE)
+
+            append_jsonl(order_path, ob)
+            append_jsonl(pos_path, pb)
+            state.last_saved_book_time = t_ob
+
+            walls_row = compute_support_resistance_from_orderbook(
+                ob=ob_raw,
+                range_dollars=BOOK_RANGE_DOLLARS,
+                total_min=WALL_TOTAL_MIN,
+                imb_min=WALL_IMB_MIN,
+            )
+            append_walls_csv(walls_csv, walls_row)
+        else:
+            # Snapshot unchanged: still compute walls_row for printing only
+            walls_row = compute_support_resistance_from_orderbook(
+                ob=ob_raw,
+                range_dollars=BOOK_RANGE_DOLLARS,
+                total_min=WALL_TOTAL_MIN,
+                imb_min=WALL_IMB_MIN,
+            )
+
+        candles_n = int(getattr(state, "candles_since_books", 0) or 0)
+        try:
+            open_n = len(get_open_positions_on_symbol(MT5_SYMBOL))
+        except Exception:
+            open_n = -1
+
+        print(
+            f"[BOOKS] BOOTSTRAP {t_ob} ref={p_ob} "
+            f"SUP={walls_row.get('buy_wall_price')} RES={walls_row.get('sell_wall_price')} \n"
+            f"[CANDLES] +{candles_n} newest={state.last_saved_candle_time} \n"
+            f"[HB] open={open_n} last_book={state.last_saved_book_time} wall={state.last_wall_time}"
+        )
+
+        # schedule next normal wake off this snapshot time
+        try:
+            last_dt = parse_oanda_time(t_ob)
+            next_expected = last_dt + timedelta(seconds=BOOK_STEP_SECONDS)
+            state.next_books_wake_utc = fmt_z_time(next_expected + timedelta(seconds=5))
+        except Exception:
+            state.next_books_wake_utc = fmt_z_time(datetime.now(timezone.utc) + timedelta(seconds=BOOK_STEP_SECONDS))
+
+        # reset candles counter after we printed it alongside books
+        state.candles_since_books = 0
+        state.last_books_print_time = t_ob
+
+    except Exception as e:
+        append_trade_log({"event": "BOOKS_BOOTSTRAP_ERR", "err": str(e)})
+        print(f"[BOOKS] BOOTSTRAP_ERR: {e}")
+
+
 def maybe_run_books_logger(state: BotState) -> None:
     now = datetime.now(timezone.utc)
     day = day_yyyymmdd(now)
@@ -1611,7 +1686,7 @@ def main():
     try:
         maybe_run_books_logger(state)
         maybe_run_candles_logger(state)
-        # strategy can run immediately if candles bootstrap filled enough history
+        fetch_and_print_books_status(state)      # prints books + candles + HB immediately
         maybe_process_new_candles_and_trade(state)
         save_state(botstate_to_dict(state))
     except Exception as e:

@@ -1,18 +1,18 @@
 {
   "instrument": "XAU_USD",
   "last_saved_book_time": "2026-01-29T18:00:00Z",
-  "next_books_wake_utc": "2026-01-29T18:09:23Z",
-  "last_saved_candle_time": "2026-01-29T18:08:00.000000000Z",
-  "next_candle_poll_utc": "2026-01-29T18:09:23Z",
-  "candles_since_books": 10,
+  "next_books_wake_utc": "2026-01-29T18:11:06Z",
+  "last_saved_candle_time": "2026-01-29T18:09:00.000000000Z",
+  "next_candle_poll_utc": "2026-01-29T18:11:06Z",
+  "candles_since_books": 11,
   "last_books_print_time": "2026-01-29T18:00:00Z",
   "did_bootstrap_books": true,
   "did_bootstrap_candles": false,
-  "last_processed_candle_time": "2026-01-29T18:08:00.000000000Z",
+  "last_processed_candle_time": "2026-01-29T18:09:00.000000000Z",
   "last_wall_time": "2026-01-29T18:00:00Z",
   "retests_support": 0,
-  "retests_resist": 2,
-  "last_entry_candle_time": "2026-01-29T18:08:00.000000000Z",
+  "retests_resist": 3,
+  "last_entry_candle_time": "2026-01-29T18:09:00.000000000Z",
   "entries_this_candle": 0,
   "pos_meta": {
     "1438847577": {
@@ -28,7 +28,7 @@
       "last_trail_reason": null
     }
   },
-  "tick_n": 24,
+  "tick_n": 25,
   "schema_version": 4,
-  "saved_dt_utc": "2026-01-29T18:09:52Z"
+  "saved_dt_utc": "2026-01-29T18:11:53Z"
 }
